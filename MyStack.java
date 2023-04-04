@@ -1,9 +1,10 @@
-/**
- * MyStack.java
- * This project is basically just manipulating a Linked Stack using various different methods.
- * Mohammad Garada 
- */
 
+/**
+*MyStack.java
+*This project provides an implementation of the StackInterface using a linked stack
+data structure. 
+*Mohammad Garada 
+**/
 
 package cmsc256;
 
@@ -16,37 +17,41 @@ import java.util.Scanner;
 
 public class MyStack<E> implements StackInterface<E> {
 
-    private SLelement<E> top;            // Pointer to first element
-    private int size;                  // Number of elements
+    private SLelement<E> top;  // Pointer to first element
+    private int size;          // Number of elements
 
-
-    //constructors
+    // Constructors
     public MyStack(int size) {
         this();
     }
-
 
     public MyStack() {
         clear();
     }
 
+    /**
+     * Adds a new entry to the top of this stack.
+     *
+     * @param newEntry An object to be added to the stack.
+     * @throws IllegalArgumentException if newEntry is null.
+     */
     @Override
-    //Adds a new entry to the top of this stack
     public void push(E newEntry) {
-
-        //if newEntry is null, throw an exception
-     if(newEntry == null){
-         throw new IllegalArgumentException();
-     }
+        if (newEntry == null) {
+            throw new IllegalArgumentException();
+        }
         top = new SLelement<E>(newEntry, top);
         size++;
     }
 
+    /**
+     * Removes and returns this stack's top entry.
+     *
+     * @return The object at the top of the stack.
+     * @throws EmptyStackException if the stack is empty.
+     */
     @Override
-    //Removes and returns this stack's top entry.
     public E pop() {
-
-        //if the stack is empty, throw an exception
         if (isEmpty()) {
             throw new EmptyStackException();
         }
@@ -56,45 +61,75 @@ public class MyStack<E> implements StackInterface<E> {
         return it;
     }
 
+    /**
+     * Retrieves this stack's top entry.
+     *
+     * @return The object at the top of the stack.
+     * @throws EmptyStackException if the stack is empty.
+     */
     @Override
-    //Retrieves this stack's top entry.
     public E peek() {
-
-        //if the stack is empty, throw an exception
         if (isEmpty()) {
             throw new EmptyStackException();
         }
-
         return top.getValue();
     }
 
+    /**
+     * Detects whether this stack is empty.
+     *
+     * @return True if the stack is empty, false otherwise.
+     */
     @Override
-    //Detects whether this stack is empty
     public boolean isEmpty() {
         return size == 0;
     }
 
+    /**
+     * Removes all entries from this stack.
+     */
     @Override
-    //Removes all entries from this stack
     public void clear() {
         top = null;
         size = 0;
     }
 
-    //This method uses the MyStack<E> to detect whether an html file is tag balanced or not.
-    public static boolean isBalanced(File webpage) throws FileNotFoundException {
+    /**
+     * This method uses the MyStack<E> to detect whether an html file is tag balanced or not.
+     *
+     * @param webpage The html file to check for tag balancing.
+     * @return True if the tags are balanced, false otherwise.
+     * @throws FileNotFoundException if the html file is not found.
+     */
+   public static boolean isBalanced(File webpage) throws FileNotFoundException {
 
-        boolean answer = false;
+    // Create an empty stack
+    Stack<Character> stack = new Stack<>();
 
-        Scanner input = new Scanner(webpage);
-        String userInput = input.next();
+    // Open the file and read its contents line by line
+    Scanner scanner = new Scanner(webpage);
+    while (scanner.hasNextLine()) {
+        String line = scanner.nextLine();
 
-
-
-        return true;
+        // Check each character in the line
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+            if (c == '<') {
+                // Push the opening tag onto the stack
+                stack.push(c);
+            } else if (c == '>') {
+                if (stack.isEmpty()) {
+                    // Found a closing tag with no corresponding opening tag
+                    return false;
+                } else {
+                    // Pop the most recent opening tag from the stack
+                    stack.pop();
+                }
+            }
+        }
     }
 
-
-
-
+    // If the stack is empty, all opening tags have been closed
+    return stack.isEmpty();
 }
+
