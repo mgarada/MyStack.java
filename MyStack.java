@@ -1,8 +1,7 @@
 /**
- * CMSC 256
  * MyStack.java
  * This project is basically just manipulating a Linked Stack using various different methods.
- * [Garada], [Mohammad]
+ * Mohammad Garada 
  */
 
 
